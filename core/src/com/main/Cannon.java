@@ -18,10 +18,10 @@ public class Cannon extends Sprite {
         this.h = (Maps.resources.get("cannons_"+type) == null ? Resources.cannon : Maps.resources.get("cannons_"+type)).getHeight(); // rows;
         this.x = lock(x, w);
         this.y = lock(y, h);
-        this.hp = 100;
+        this.hp = Maps.values.get("health_" + type) == null ? 100 : Maps.values.get("health_" + type);
         hp_max = this.hp;
         hp_delay = 22;
-        delay = 30;
+        delay = Maps.values.get("delay_" + type) == null ? 30 : Maps.values.get("delay_" + type);
         setPosition(this.x, this.y);
     }
 
@@ -35,8 +35,8 @@ public class Cannon extends Sprite {
 
     void draw(SpriteBatch b){
         super.draw(b);
-        b.draw(Resources.create_texture(Color.WHITE), x, y + h, w, 5);
-        b.draw(Resources.create_texture(Color.GREEN), x, y + h, hp * ((float)w / hp_max), 5);
+        b.draw(Resources.white, x, y + h, w, 5);
+        b.draw(Resources.green, x, y + h, hp * ((float)w / hp_max), 5);
     }
 
     int lock(int coord, int sizer){
@@ -70,7 +70,7 @@ public class Cannon extends Sprite {
         }
         //return the calc'd angle between cannon and zombie
         float toa = (float)(y - (closest.y + closest.h / 2)) / (float)(x - (closest.x + closest.w / 2));
-        float rev = x >= closest.x ? (float)Math.PI : 0;
+        float rev = x >= (closest.x + closest.w / 2) ? (float)Math.PI : 0;
         return (float)(Math.atan(toa) + rev);
     }
 }

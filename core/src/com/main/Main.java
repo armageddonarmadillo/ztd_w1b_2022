@@ -2,6 +2,7 @@ package com.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,13 +14,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Main extends ApplicationAdapter {
-	/* TODO ADD:
-		- wave system(s)
-		- game over / life 0
-		- game balance -> GAIN MONEY FOR KILLS, PAY MONEY FOR PLACING (UNLOCK TOO)
-		- build apk -- CORE COMPLETE
-		- additional fun stuff (tiles, effects, tooltips, additional allied units, enemy attacks, play/pause)
-	 */
+	static Preferences p;
 	static int gw = 1000, gh = 600;
 	SpriteBatch batch;
 	OrthographicCamera camera;
@@ -39,6 +34,8 @@ public class Main extends ApplicationAdapter {
 	static Scene game;
 	static Scene about;
 	static Scene achievements;
+	static Scene gameover;
+	static Scene pause;
 
 	@Override
 	public void create () {
@@ -46,10 +43,13 @@ public class Main extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, gw, gh);
 		Maps.init_maps();
+		p = Gdx.app.getPreferences("bucket");
 		start = new Start();
 		game = new Game();
 		about = new About();
 		achievements = new Achievements();
+		gameover = new GameOver();
+		pause = new Pause();
 		which = screen.START;
 	}
 
@@ -57,7 +57,6 @@ public class Main extends ApplicationAdapter {
 	public void render () {
 		tap();
 		ScreenUtils.clear(1, 0, 0, 1);
-		System.out.println(camera.zoom);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);	//VISUAL SCALING
 		batch.begin();
@@ -73,6 +72,13 @@ public class Main extends ApplicationAdapter {
 				break;
 			case ACHIEVEMENTS:
 				achievements.draw(batch);
+				break;
+			case LOSE:
+				gameover.draw(batch);
+				break;
+			case PAUSE:
+				game.draw(batch);
+				pause.draw(batch);
 				break;
 			default:
 				break;
@@ -97,6 +103,12 @@ public class Main extends ApplicationAdapter {
 				break;
 			case ACHIEVEMENTS:
 				achievements.tap(x, y);
+				break;
+			case LOSE:
+				gameover.tap(x, y);
+				break;
+			case PAUSE:
+				pause.tap(x, y);
 				break;
 			default:
 				break;

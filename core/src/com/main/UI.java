@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class UI {
+public abstract class UI {
     static BitmapFont font = new BitmapFont();
     static int money, life, score, wave;
 

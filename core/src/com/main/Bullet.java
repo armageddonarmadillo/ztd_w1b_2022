@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Bullet {
-    int x, y, w, h, speed;
+    int x, y, w, h, speed, damage;
     boolean active = true;
     float angle;
     String type;
@@ -15,7 +15,8 @@ public class Bullet {
         this.h = (Maps.resources.get("bullets_"+type) == null ? Resources.bullet : Maps.resources.get("bullets_"+type)).getHeight(); // rows;
         this.x = x - w / 2;
         this.y = y - h / 2;
-        speed = 10;
+        speed = Maps.values.get("speed_" + type) == null ? 10 : Maps.values.get("speed_" + type);
+        damage = Maps.values.get("damage_" + type) == null ? 1 : Maps.values.get("damage_" + type);
         this.angle = angle;
     }
 
@@ -35,6 +36,6 @@ public class Bullet {
 
     void be_collision(){
         if(Game.enemies.isEmpty()) return;
-        for(Enemy e : Game.enemies) if(e.hitbox().contains(hitbox())) { e.hp--; active = false; }
+        for(Enemy e : Game.enemies) if(e.hitbox().contains(hitbox())) { e.hp-=damage; active = false; }
     }
 }

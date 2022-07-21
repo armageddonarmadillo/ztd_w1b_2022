@@ -35,10 +35,12 @@ public class Enemy {
     }
 
     void update(){
+        for(Wall w : Game.walls) if(w.hitbox().overlaps(hitbox())) { hp--; w.hp--; /*break;*/}
         x-=s;
         active = !(x + w < 0) && !(hp <= 0);
-        UI.life -= (x + w < 0) ? 1 : 0;
-        UI.score += (hp <= 0) ? 1 : 0;
+        UI.life -= (x + w < 0) ? hp : 0;
+        UI.score += (hp <= 0) ? hp_max : 0;
+        UI.money += (hp <= 0) ? hp_max * 5 : 0;
     }
 
     void draw(SpriteBatch b){
@@ -46,8 +48,8 @@ public class Enemy {
         frame_time += Gdx.graphics.getDeltaTime();
         frame = (TextureRegion)anim.getKeyFrame(frame_time, true);
         b.draw(frame, x, y);
-        b.draw(Resources.create_texture(Color.WHITE), x, y + h, w, 5);
-        b.draw(Resources.create_texture(Color.GREEN), x, y + h, hp * ((float)w / hp_max), 5);
+        b.draw(Resources.white, x, y + h, w, 5);
+        b.draw(Resources.green, x, y + h, (Math.max(hp, 0)) * ((float)w / hp_max), 5);
     }
 
     void init_animation(){
